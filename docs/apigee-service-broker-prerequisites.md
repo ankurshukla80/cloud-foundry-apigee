@@ -21,6 +21,8 @@ The following are prequisites for installing and using the Apigee Edge Cloud Fou
 
     This broker works with both private cloud (OPDK) and SaaS Edge. If you are not an existing Apigee Edge customer you can register for a free SaaS account at [https://accounts.apigee.com/accounts/sign_up](https://accounts.apigee.com/accounts/sign_up).
 
+- An Active PWS Trial Account - you can sign up for free [here](https://pivotal.io/get-started). This will give you 2GB of App instance memory, which is enough to complete Apigee PCF Labs.
+
 - Apigee SSO CLI
 
     The broker will create the (reverse) proxy on Apigee Edge for the app's route. This requires authenticating with Edge; ideally this is done with an authorization token, generated with scripts in the [Apigee SSO CLI bundle](http://docs.apigee.com/api-services/content/using-oauth2-security-apigee-edge-management-api#installingacurlandgettokenutilities). Plain username and password may also be used if necessary.

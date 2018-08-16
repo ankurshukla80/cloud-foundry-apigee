@@ -1,28 +1,15 @@
 ---
 applications:
-- name: apigee-cf-service-broker
+- name: apigee-cf-service-broker-as
+memory: 25M
 command: node server.js
 buildpack: nodejs_buildpack
 env:
   APIGEE_CONFIGURATIONS: | 
-                        [{"org":"test-org",
+                        [
+                        {"org":"amer-api-partner19",
                         "env":"test",
-                        "apigee_dashboard_url":"https://onprem.com/platform/#/",
-                        "apigee_mgmt_api_url":"https://onprem.com/v1",
-                        "apigee_proxy_domain":"onprem.net"},
-                        {"org":"amer-demo5",
-                        "env":"test",
-                        "apigee_dashboard_url":"https://enterprise.apigee.com/platform/#/",
-                        "apigee_mgmt_api_url":"https://api.enterprise.apigee.com/v1",
-                        "apigee_proxy_domain":"apigee.net"},
-                        {"org":"cdmo",
-                        "env":"test",
-                        "apigee_dashboard_url":"https://enterprise.apigee.com/platform/#/",
-                        "apigee_mgmt_api_url":"https://api.enterprise.apigee.com/v1",
-                        "apigee_proxy_domain":"apigee.net"},
-                        {"org":"org-name-here",
-                        "env":"env-name-here",
-                        "apigee_dashboard_url":"https://enterprise.apigee.com/platform/#/",
+                        "apigee_dashboard_url":"https://enterprise.apigee.com/platform/amer-api-partner19/",
                         "apigee_mgmt_api_url":"https://api.enterprise.apigee.com/v1",
                         "apigee_proxy_domain":"apigee.net"}
                         ]

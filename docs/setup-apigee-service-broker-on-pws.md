@@ -60,18 +60,28 @@ Space:          development
 
     ```bash
     $ cd <your working directory>
-    $ git clone https://github.com/apigee/cloud-foundry-apigee.git
+    $ git clone https://github.com/ankurshukla80/cloud-foundry-apigee.git
     $ cd cloud-foundry-apigee/apigee-cf-service-broker
     ```
-
-1. Load dependencies and test (requires that Node.js is installed).
+2. Load dependencies and test (requires that Node.js is installed).
 
     ```bash
     $ npm install
     $ npm test
     ```
 
-1. In the apigee-cf-service-broker directory, edit the manifest.yml file to set required variables (``org`` and ``env``) and override defaults as appropriate for your environment and Apigee Edge account.
+3. In the apigee-cf-service-broker directory, edit the manifest.yml file to make the following changes:
+
+    3 a) Change the <i>name</i> property for your application and add your initials at the end to make this parameter unique:
+    
+    ```bash
+    ---
+        applications:
+        - name: apigee-cf-service-broker-as
+           memory: 25M
+           command: node server.js
+    ```
+    3 b) (Optional) change the required variables (``org`` and ``env``) and override defaults as appropriate for your environment and Apigee Edge account. (We have pre-populated this yaml file with Apigee Demo Org that you can use for the purpose of this lab) 
 
     Item | Purpose | Default (for SaaS Edge)
     ---- | ---- | ----
@@ -94,39 +104,57 @@ Space:          development
                             <repeat the preceding for multiple orgs and envs>]
     ```
 
-1. Deploy the Apigee service broker from the source in this repository.
+4. Deploy the Apigee service broker from the source in this repository.
 
     ```bash
     $ cf push
+    ...
+    requested state: started
+    instances: 1/1
+    usage: 25M x 1 instances
+    urls: apigee-cf-service-broker-as.cfapps.io
+    last uploaded: Thu Aug 9 18:46:38 UTC 2018
+    stack: cflinuxfs2
+    buildpack: nodejs_buildpack
+
+        state     since                    cpu    memory         disk           details
+        #0   running   2018-08-09 11:48:41 AM   0.0%   20.6M of 25M   168.4M of 1G
     ```
     Make a note of the broker app's URL, which you'll use to create the service broker later. Here's an example:
 
-    ```
-    urls: apigee-cf-service-broker.local.pcfdev.io
+    ```bash
+    urls: apigee-cf-service-broker-as.cfapps.io
     ```
 
-1. Choose a user name and password and store them as environment variables for the broker app. Then restage the broker app to load those variables.
+5. Choose a user name and password and store them as environment variables for the broker app. Then restage the broker app to load those variables.
 
     Communication with the broker is protected with a user name and password (to prevent unauthorized access to the broker app from other sources). These credentials are specified when the broker is created, and then used for each call. However, validating those credentials is the responsibility of the broker app, which does not have those credentials provided by the runtime.
 
     ```bash
-    $ cf set-env apigee-cf-service-broker SECURITY_USER_NAME <pick a username>
-    $ cf set-env apigee-cf-service-broker SECURITY_USER_PASSWORD <pick a password>
-    $ cf restage apigee-cf-service-broker
+    $ cf set-env apigee-cf-service-broker-as SECURITY_USER_NAME <pick a username>
+    $ cf set-env apigee-cf-service-broker-as SECURITY_USER_PASSWORD <pick a password>
+    $ cf restage apigee-cf-service-broker-as
     ```
 
-1. Use the credentials you just established, along with the URL for the broker app, to create the service broker in Cloud Foundry.
+6. Use the credentials you just established, along with the URL for the broker app, to create the <i>space scoped</i> service broker in Cloud Foundry.
 
     ```bash
-    $ cf create-service-broker apigee-edge <security-user-name> <security-user-password> https://apigee-cf-service-broker.local.pcfdev.io
+    $ cf create-service-broker apigee-edge <security-user-name> <security-user-password> https://apigee-cf-service-broker-as.cfapps.io --space-scoped
     ```
 
-1. Publish the service broker in your Cloud Foundry marketplace.
+7. Confirm that the service broker is showing up in your Cloud Foundry marketplace and is showing the 3 available service plan offerings.
 
     ```bash
-    $ cf enable-service-access apigee-edge
     $ cf marketplace
     $ cf marketplace -s apigee-edge
+    Getting service plan information for service apigee-edge as shuklaankur@google.com...
+    OK
+
+    service plan              description                                                                                                                       free or paid
+    org                       Apigee Edge for Route Services                                                                                                    free
+    microgateway              Apigee Edge Microgateway for Route Services. This plan requires launching Microgateway as a separate Cloud Foundry application    free
+    microgateway-coresident   Apigee Edge Microgateway coresident plan. Coresident means Microgateway will be on the same container as the target application   free
+    apigee-cf-service-broker git:(master) ✗
     ```
 ## <a name="instance"></a>Step 2: Install the plugin
 
